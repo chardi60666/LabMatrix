@@ -139,3 +139,54 @@ TEST(TVectorTest, FrontAndBack) {
     EXPECT_EQ(vector.front(), 10);
     EXPECT_EQ(vector.back(), 30);
 }
+TEST(TVectorTest, ShrinkToFit) {
+    TVector<int> vector;
+
+    vector.reserve(100);
+
+    vector.push_back(10);
+    vector.push_back(20);
+    vector.push_back(30);
+
+    EXPECT_EQ(vector.size(), 3);
+    EXPECT_EQ(vector.capacity(), 100);
+
+    vector.shrink_to_fit();
+
+    EXPECT_EQ(vector.size(), 3);
+    EXPECT_EQ(vector.capacity(), 3);
+
+    EXPECT_EQ(vector[0], 10);
+    EXPECT_EQ(vector[1], 20);
+    EXPECT_EQ(vector[2], 30);
+}
+
+TEST(TVectorTest, ShrinkToFitEmptyVector) {
+    TVector<int> vector;
+
+    vector.reserve(100);
+
+    EXPECT_EQ(vector.size(), 0);
+    EXPECT_EQ(vector.capacity(), 100);
+
+    vector.shrink_to_fit();
+
+    EXPECT_EQ(vector.size(), 0);
+    EXPECT_EQ(vector.capacity(), 0);
+}
+
+TEST(TVectorTest, ShrinkToFitWhenAlreadyOptimal) {
+    TVector<int> vector{1, 2, 3};
+
+    EXPECT_EQ(vector.size(), 3);
+    EXPECT_EQ(vector.capacity(), 3);
+
+    vector.shrink_to_fit();
+
+    EXPECT_EQ(vector.size(), 3);
+    EXPECT_EQ(vector.capacity(), 3);
+
+    EXPECT_EQ(vector[0], 1);
+    EXPECT_EQ(vector[1], 2);
+    EXPECT_EQ(vector[2], 3);
+}

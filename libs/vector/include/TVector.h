@@ -207,7 +207,31 @@ public:
         data_ = new_data;
         capacity_ = new_capacity;
     }
+    void shrink_to_fit() {
+        if (capacity_ == size_) {
+            return;
+        }
 
+        if (size_ == 0) {
+            delete[] data_;
+
+            data_ = nullptr;
+            capacity_ = 0;
+
+            return;
+        }
+
+        T* new_data = new T[size_];
+
+        for (std::size_t i = 0; i < size_; ++i) {
+            new_data[i] = std::move(data_[i]);
+        }
+
+        delete[] data_;
+
+        data_ = new_data;
+        capacity_ = size_;
+    }
     std::size_t size() const {
         return size_;
     }
